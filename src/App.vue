@@ -15,7 +15,7 @@ import Statistiques from './component/Statistiques.vue';
 import ZoneCombat from './component/ZoneCombat.vue';
 
 const combattants = ref([
-  {id: 1, nom: "Lorelei", moral: 100, skill: 500, image: "./src/assets/lorelei.jpeg"},
+  {id: 1, nom: "Lorelei", moral: 100, skill: 50, image: "./src/assets/lorelei.jpeg"},
   {id: 2, nom: "Julien", moral: 100, skill: 50, image: "./src/assets/image.jpg"}
 ]);
 
@@ -49,7 +49,9 @@ const appliquerCompetence = (attaquantId, defenseurId, competence) => {
     if (attaquant.skill >= competence.valueSkill) {
       defenseur.moral = Math.max(0, defenseur.moral - competence.valuePV);
       attaquant.skill = Math.max(0, attaquant.skill - competence.valueSkill);
-      attaquant.skill++
+      if(attaquant.skill < 50) {
+        attaquant.skill++;
+      }
       checkWin();
       return true;
     }
