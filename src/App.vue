@@ -31,11 +31,14 @@ const competences = ref([
 const activeCombattantId = ref(1);
 const tour = ref(1);
 const combatTermine = ref(false);
+const compteurVictoire = ref(0);
+const compteurDefaite = ref(0);
 
 provide('combattants', combattants);
 provide('activeCombattantId', activeCombattantId);
 provide('combatTermine', combatTermine);
-
+provide('compteurVictoire', compteurVictoire);
+provide('compteurDefaite', compteurDefaite);
 provide('tour', tour);
 
 const appliquerCompetence = (attaquantId, defenseurId, competence) => {
@@ -101,10 +104,12 @@ const checkWin = () => {
   if (combattants.value.find(c => c.id === 1).moral <= 0) {
     alert('Vous avez perdu');
     combatTermine.value = true;
+    compteurDefaite.value++;
   }
   if (combattants.value.find(c => c.id === 2).moral <= 0) {
     alert('Vous avez gagné');
     combatTermine.value = true;
+    compteurVictoire.value++;
   } 
 }
 
