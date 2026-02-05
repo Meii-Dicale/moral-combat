@@ -12,14 +12,23 @@
 
 <script setup >
 import { ref } from 'vue';
+
+const emit = defineEmits(['competence-utilisee']);
+
 const competences = ref([
     {id: 1, nom: "🤭 Lancer une vanne", valuePV: 10, valueSkill: 10},
     {id: 2, nom: "🤬 Insulter", valuePV: 15, valueSkill: 15},
     {id: 3, nom: "🖕 Faire une doigt d'honneur", valuePV: 20, valueSkill: 20},
     {id: 4, nom: "🤔 Comparer les notes", valuePV: 20, valueSkill: 20},
-])
+    {id: 5, nom: "🧘 Rester calme", valuePV: 0, valueSkill: 0},
+
+])  
+
 const utiliserCompetence = (id) => {
-    console.log(id)
+    const competence = competences.value.find(c => c.id === id);
+    if (competence) {
+        emit('competence-utilisee', competence);
+    }
 }
 </script>
 

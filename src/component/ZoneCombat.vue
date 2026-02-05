@@ -17,10 +17,8 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { inject } from 'vue';
 
-const combattants = ref([
-    {id: 1, nom: "Lorelei", moral: 100, skill:50, image: ""},
-    {id: 2, nom: "Julien", moral: 100, skill:50, image: ""}
-])
+// Récupérer les combattants depuis le parent (App.vue)
+const combattants = inject('combattants');
 </script>
