@@ -15,7 +15,7 @@ import Statistiques from './component/Statistiques.vue';
 import ZoneCombat from './component/ZoneCombat.vue';
 
 const combattants = ref([
-  {id: 1, nom: "Lorelei", moral: 100, skill: 50, image: "./src/assets/lorelei.jpeg"},
+  {id: 1, nom: "Lorelei", moral: 100, skill: 500, image: "./src/assets/lorelei.jpeg"},
   {id: 2, nom: "Julien", moral: 100, skill: 50, image: "./src/assets/image.jpg"}
 ]);
 
@@ -29,9 +29,14 @@ const competences = ref([
 
 // Combattant actif (1 = joueur, 2 = ordinateur)
 const activeCombattantId = ref(1);
+const tour = ref(1);
+const combatTermine = ref(false);
 
 provide('combattants', combattants);
 provide('activeCombattantId', activeCombattantId);
+provide('combatTermine', combatTermine);
+
+provide('tour', tour);
 
 const appliquerCompetence = (attaquantId, defenseurId, competence) => {
   const attaquant = combattants.value.find(c => c.id === attaquantId);
@@ -53,7 +58,7 @@ const appliquerCompetence = (attaquantId, defenseurId, competence) => {
 };
 
 const tourOrdinateur = () => {
-  // Mettre à jour le combattant actif pour l'ordinateur
+  if(combatTermine.value === false) {
   activeCombattantId.value = 2;
   
   const competenceAleatoire = competences.value[Math.floor(Math.random() * competences.value.length)];
@@ -71,7 +76,9 @@ const tourOrdinateur = () => {
   
   setTimeout(() => {
     activeCombattantId.value = 1;
+    tour.value++;
   }, 1000);
+}
 };
 
 const handleCompetence = (competence) => {
@@ -91,9 +98,11 @@ const handleCompetence = (competence) => {
 const checkWin = () => {
   if (combattants.value.find(c => c.id === 1).moral <= 0) {
     alert('Vous avez perdu');
+    combatTermine.value = true;
   }
   if (combattants.value.find(c => c.id === 2).moral <= 0) {
     alert('Vous avez gagné');
+    combatTermine.value = true;
   } 
 }
 

@@ -1,9 +1,9 @@
 <template>
     <div class="d-flex flex-row align-stretch justify-space-around mt-5">
         <v-btn  v-for="competence in competences" :key="competence.id" @click="utiliserCompetence(competence.id)" 
-                :disabled="activeCombattantId === 2" 
+                :disabled="activeCombattantId === 2 || combatTermine" 
                 class="competence-btn"
-                :class="{ 'disabled-btn': activeCombattantId === 2 }">
+                :class="{ 'disabled-btn': activeCombattantId === 2 || combatTermine }">
             <div class="d-flex flex-column align-center justify-center">
                 <h3>{{competence.nom}}</h3>
                 <p>PV : {{competence.valuePV}}</p>
@@ -18,6 +18,7 @@ import { ref, inject } from 'vue';
 
 const emit = defineEmits(['competence-utilisee']);
 const activeCombattantId = inject('activeCombattantId');
+const combatTermine = inject('combatTermine');
 
 const competences = ref([
     {id: 1, nom: "🤭 Lancer une vanne", valuePV: 10, valueSkill: 10},
@@ -29,7 +30,7 @@ const competences = ref([
 ])  
 
 const utiliserCompetence = (id) => {
-    if (activeCombattantId.value === 2) {
+    if (activeCombattantId.value === 2 || combatTermine.value) {
         return; 
     }
     const competence = competences.value.find(c => c.id === id);
@@ -54,6 +55,10 @@ const utiliserCompetence = (id) => {
 .disabled-btn {
     opacity: 0.5 !important;
     cursor: not-allowed !important;
+    filter: grayscale(100%) !important;
+}
+
+.disabled-btn :deep(.v-btn__content) {
     pointer-events: none !important;
 }
 </style>
