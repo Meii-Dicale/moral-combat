@@ -1,6 +1,9 @@
 <template>
     <div class="d-flex flex-row align-stretch justify-space-around mt-5">
-        <v-btn v-for="competence in competences" :key="competence.id" @click="utiliserCompetence(competence.id)" class="competence-btn">
+        <v-btn  v-for="competence in competences" :key="competence.id" @click="utiliserCompetence(competence.id)" 
+                :disabled="activeCombattantId === 2" 
+                class="competence-btn"
+                :class="{ 'disabled-btn': activeCombattantId === 2 }">
             <div class="d-flex flex-column align-center justify-center">
                 <h3>{{competence.nom}}</h3>
                 <p>PV : {{competence.valuePV}}</p>
@@ -11,9 +14,10 @@
 </template>
 
 <script setup >
-import { ref } from 'vue';
+import { ref, inject } from 'vue';
 
 const emit = defineEmits(['competence-utilisee']);
+const activeCombattantId = inject('activeCombattantId');
 
 const competences = ref([
     {id: 1, nom: "🤭 Lancer une vanne", valuePV: 10, valueSkill: 10},
@@ -25,6 +29,9 @@ const competences = ref([
 ])  
 
 const utiliserCompetence = (id) => {
+    if (activeCombattantId.value === 2) {
+        return; 
+    }
     const competence = competences.value.find(c => c.id === id);
     if (competence) {
         emit('competence-utilisee', competence);
@@ -42,5 +49,11 @@ const utiliserCompetence = (id) => {
 .competence-btn :deep(.v-btn__content) {
     height: 100%;
     width: 100%;
+}
+
+.disabled-btn {
+    opacity: 0.5 !important;
+    cursor: not-allowed !important;
+    pointer-events: none !important;
 }
 </style>

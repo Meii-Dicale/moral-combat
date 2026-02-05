@@ -45,6 +45,7 @@ const appliquerCompetence = (attaquantId, defenseurId, competence) => {
       defenseur.moral = Math.max(0, defenseur.moral - competence.valuePV);
       attaquant.skill = Math.max(0, attaquant.skill - competence.valueSkill);
       attaquant.skill++
+      checkWin();
       return true;
     }
   }
@@ -86,6 +87,16 @@ const handleCompetence = (competence) => {
     alert('Pas assez de skill pour utiliser cette compétence');
   }
 };
+
+const checkWin = () => {
+  if (combattants.value.find(c => c.id === 1).moral <= 0) {
+    alert('Vous avez perdu');
+  }
+  if (combattants.value.find(c => c.id === 2).moral <= 0) {
+    alert('Vous avez gagné');
+  } 
+}
+
 </script>
 
 <style scoped>

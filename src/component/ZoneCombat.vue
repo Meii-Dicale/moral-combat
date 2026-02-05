@@ -40,9 +40,7 @@
                         height="25"
                         rounded
                     >
-                        <template v-slot:default="{ value }">
-                            <strong>{{ Math.ceil(value) }}%</strong>
-                        </template>
+
                     </v-progress-linear>
                 </div>
             </v-card-text>
