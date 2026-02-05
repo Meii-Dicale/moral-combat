@@ -15,8 +15,8 @@ import Statistiques from './component/Statistiques.vue';
 import ZoneCombat from './component/ZoneCombat.vue';
 
 const combattants = ref([
-  {id: 1, nom: "Lorelei", moral: 100, skill: 50, image: ""},
-  {id: 2, nom: "Julien", moral: 100, skill: 50, image: ""}
+  {id: 1, nom: "Lorelei", moral: 100, skill: 50, image: "./src/assets/lorelei.jpeg"},
+  {id: 2, nom: "Julien", moral: 100, skill: 50, image: "./src/assets/image.jpg"}
 ]);
 
 const competences = ref([
@@ -27,13 +27,20 @@ const competences = ref([
   {id: 5, nom: "🧘 Rester calme", valuePV: 0, valueSkill: 0},
 ]);
 
+// Combattant actif (1 = joueur, 2 = ordinateur)
+const activeCombattantId = ref(1);
+
 provide('combattants', combattants);
+provide('activeCombattantId', activeCombattantId);
 
 const appliquerCompetence = (attaquantId, defenseurId, competence) => {
   const attaquant = combattants.value.find(c => c.id === attaquantId);
   const defenseur = combattants.value.find(c => c.id === defenseurId);
 
   if (attaquant && defenseur) {
+    // Mettre à jour le combattant actif
+    activeCombattantId.value = attaquantId;
+    
     if (attaquant.skill >= competence.valueSkill) {
       defenseur.moral = Math.max(0, defenseur.moral - competence.valuePV);
       attaquant.skill = Math.max(0, attaquant.skill - competence.valueSkill);
@@ -45,29 +52,36 @@ const appliquerCompetence = (attaquantId, defenseurId, competence) => {
 };
 
 const tourOrdinateur = () => {
+  // Mettre à jour le combattant actif pour l'ordinateur
+  activeCombattantId.value = 2;
+  
   const competenceAleatoire = competences.value[Math.floor(Math.random() * competences.value.length)];
   
   const succes = appliquerCompetence(2, 1, competenceAleatoire);
   
   if (succes) {
-    console.log(`L'ordinateur utilise: ${competenceAleatoire.nom}`);
   } else {
-    // Si pas assez de skill, utiliser la compétence 5 (Rester calme)
     const competenceCalme = competences.value.find(c => c.id === 5);
     if (competenceCalme) {
       appliquerCompetence(2, 1, competenceCalme);
       console.log(`L'ordinateur utilise: ${competenceCalme.nom}`);
     }
   }
+  
+  setTimeout(() => {
+    activeCombattantId.value = 1;
+  }, 1000);
 };
 
-const handleCompetence = (competence) => {  
+const handleCompetence = (competence) => {
+  activeCombattantId.value = 1;
+  
   const succes = appliquerCompetence(1, 2, competence);
   
   if (succes) {
-    setTimeout(() => {
+
       tourOrdinateur();
-    }, 500);
+
   } else {
     alert('Pas assez de skill pour utiliser cette compétence');
   }

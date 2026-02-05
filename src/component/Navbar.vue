@@ -1,6 +1,7 @@
 <template>
 <div class="navbar">
     <h1>Moral Combat</h1>
+    <span> Choisissez une compétence pour vaincre Julien. Après chaque action un point de skill est régénéré.  </span>
 </div>
 </template>
 
@@ -17,5 +18,6 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
+    flex-direction: column;
 }
 </style>
