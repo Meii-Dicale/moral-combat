@@ -1,9 +1,11 @@
 <template>
   <div id="app">
 <Navbar />
+<ModalAvantJeu @difficulte-choisie="onDifficulteChoisie" />
 <ZoneCombat />
 <InterfaceCompetence @competence-utilisee="handleCompetence" />
 <Statistiques />
+
   </div>
 </template>
 
@@ -13,10 +15,11 @@ import InterfaceCompetence from './component/InterfaceCompetence.vue';
 import Navbar from './component/Navbar.vue';
 import Statistiques from './component/Statistiques.vue';
 import ZoneCombat from './component/ZoneCombat.vue';
+import ModalAvantJeu from './component/ModalAvantJeu.vue';
 
 const combattants = ref([
-  {id: 1, nom: "Lorelei", moral: 100, skill: 50, image: "./src/assets/lorelei.jpeg"},
-  {id: 2, nom: "Julien", moral: 100, skill: 50, image: "./src/assets/image.jpg"}
+  {id: 1, nom: "Lorelei", moral: 100, skill: 50, moralMax: 100, skillMax: 50, image: "./src/assets/lorelei.jpeg"},
+  {id: 2, nom: "Julien", moral: 100, skill: 50, moralMax: 100, skillMax: 50, image: "./src/assets/image.jpg"}
 ]);
 
 const competences = ref([
@@ -33,6 +36,7 @@ const tour = ref(1);
 const combatTermine = ref(false);
 const compteurVictoire = ref(0);
 const compteurDefaite = ref(0);
+const difficulteChoisie = ref(false);
 
 provide('combattants', combattants);
 provide('activeCombattantId', activeCombattantId);
@@ -40,6 +44,7 @@ provide('combatTermine', combatTermine);
 provide('compteurVictoire', compteurVictoire);
 provide('compteurDefaite', compteurDefaite);
 provide('tour', tour);
+provide('difficulteChoisie', difficulteChoisie);
 
 const appliquerCompetence = async (attaquantId, defenseurId, competence) => {
   const attaquant = combattants.value.find(c => c.id === attaquantId);
@@ -99,6 +104,10 @@ const tourOrdinateur = async () => {
 };
 
 const handleCompetence = async (competence) => {
+  if (!difficulteChoisie.value) {
+    return; // Empêcher les actions si la difficulté n'est pas choisie
+  }
+  
   activeCombattantId.value = 1;
   
   const succes = await appliquerCompetence(1, 2, competence);
@@ -122,6 +131,11 @@ const checkWin = () => {
     combatTermine.value = true;
     compteurVictoire.value++;
   } 
+}
+
+const onDifficulteChoisie = (difficulte) => {
+  difficulteChoisie.value = true;
+  console.log(`Difficulté choisie: ${difficulte}`);
 }
 
 </script>

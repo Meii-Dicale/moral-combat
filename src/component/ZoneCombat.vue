@@ -14,11 +14,11 @@
                 <div class="mb-4">
                     <div class="d-flex justify-space-between mb-2">
                         <span><strong>Moral</strong></span>
-                        <span>{{combattant.moral}} / 100</span>
+                        <span>{{combattant.moral}} / {{combattant.moralMax}}</span>
                     </div>
                     <v-progress-linear
                         :model-value="combattant.moral"
-                        :max="100"
+                        :max="combattant.moralMax"
                         color="success"
                         height="25"
                         rounded
@@ -31,16 +31,18 @@
                 <div>
                     <div class="d-flex justify-space-between mb-2">
                         <span><strong>Skill</strong></span>
-                        <span>{{combattant.skill}} / 50</span>
+                        <span>{{combattant.skill}} / {{combattant.skillMax}}</span>
                     </div>
                     <v-progress-linear
                         :model-value="combattant.skill"
-                        :max="50"
+                        :max="combattant.skillMax"
                         color="primary"
                         height="25"
                         rounded
                     >
-
+                        <template v-slot:default="{ value }">
+                            <strong>{{ Math.ceil(value) }}%</strong>
+                        </template>
                     </v-progress-linear>
                 </div>
             </v-card-text>

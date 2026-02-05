@@ -22,14 +22,17 @@ const combattants = inject('combattants');
 const tour = inject('tour');
 const compteurVictoire = inject('compteurVictoire');
 const compteurDefaite = inject('compteurDefaite');
+const difficulteChoisie = inject('difficulteChoisie');
 
 
 const resetCombat = () => {
     combattants.value.forEach(combattant => {
-        combattant.moral = 100;
-        combattant.skill = 50;
+        combattant.moral = combattant.moralMax || 100;
+        combattant.skill = combattant.skillMax || 50;
     });
     activeCombattantId.value = 1;
     combatTermine.value = false;
+    tour.value = 1;
+    difficulteChoisie.value = false;
 }
 </script>
