@@ -22,6 +22,7 @@ export default {
     InterfaceCompetence,
     Statistiques
   }
+  
 }
 </script>
 

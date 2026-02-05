@@ -1,7 +1,11 @@
 <template>
-    <div class="d-flex flex-row align-center justify-space-around mt-5">
-        <v-btn v-for="competence in competences" :key="competence.id">
-            {{competence.nom}}
+    <div class="d-flex flex-row align-stretch justify-space-around mt-5">
+        <v-btn v-for="competence in competences" :key="competence.id" @click="utiliserCompetence(competence.id)" class="competence-btn">
+            <div class="d-flex flex-column align-center justify-center">
+                <h3>{{competence.nom}}</h3>
+                <p>PV : {{competence.valuePV}}</p>
+                <p>Skill : {{competence.valueSkill}}</p>
+            </div>
         </v-btn>
     </div>
 </template>
@@ -9,9 +13,25 @@
 <script setup >
 import { ref } from 'vue';
 const competences = ref([
-    {id: 1, nom: "🤭 Lancer une vanne", value: 10},
-    {id: 2, nom: "🤬 Insulter", value: 15},
-    {id: 3, nom: "🖕 Faire une doigt d'honneur", value: 20},
-    {id: 4, nom: "🤔 Comparer les notes", value: 20},
+    {id: 1, nom: "🤭 Lancer une vanne", valuePV: 10, valueSkill: 10},
+    {id: 2, nom: "🤬 Insulter", valuePV: 15, valueSkill: 15},
+    {id: 3, nom: "🖕 Faire une doigt d'honneur", valuePV: 20, valueSkill: 20},
+    {id: 4, nom: "🤔 Comparer les notes", valuePV: 20, valueSkill: 20},
 ])
+const utiliserCompetence = (id) => {
+    console.log(id)
+}
 </script>
+
+<style scoped>
+.competence-btn {
+    height: 100% !important;
+    min-height: 150px;
+    padding: 16px !important;
+}
+
+.competence-btn :deep(.v-btn__content) {
+    height: 100%;
+    width: 100%;
+}
+</style>
