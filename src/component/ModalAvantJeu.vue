@@ -46,12 +46,20 @@
 </template>
 
 <script setup>
-import { ref, inject } from 'vue';
+import { ref, inject, watch } from 'vue';
 
 const emit = defineEmits(['difficulte-choisie']);
 
 const afficherModal = ref(true);
 const combattants = inject('combattants');
+const difficulteChoisie = inject('difficulteChoisie');
+
+// Surveiller difficulteChoisie pour réafficher la modale si elle redevient false
+watch(difficulteChoisie, (nouvelleValeur) => {
+    if (!nouvelleValeur) {
+        afficherModal.value = true;
+    }
+});
 
 const difficulteConfig = {
     facile: {
