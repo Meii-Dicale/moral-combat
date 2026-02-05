@@ -20,11 +20,11 @@ const combattants = ref([
 ]);
 
 const competences = ref([
-  {id: 1, nom: "🤭 Lancer une vanne", valuePV: 10, valueSkill: 10},
-  {id: 2, nom: "🤬 Insulter", valuePV: 15, valueSkill: 15},
-  {id: 3, nom: "🖕 Faire une doigt d'honneur", valuePV: 20, valueSkill: 20},
-  {id: 4, nom: "🤔 Comparer les notes", valuePV: 20, valueSkill: 20},
-  {id: 5, nom: "🧘 Rester calme", valuePV: 0, valueSkill: 0},
+  {id: 1, nom: "🤭 Lancer une vanne", valuePV: 10, valueSkill: 10 ,sound: ["./src/sounds/rire1.wav", "./src/sounds/rire2.wav", "./src/sounds/rire3.wav"]},
+  {id: 2, nom: "🤬 Insulter", valuePV: 15, valueSkill: 15, sound: ["./src/sounds/insulte1.mp3", "./src/sounds/insulte2.wav", "./src/sounds/insulte3.wav"]},
+  {id: 3, nom: "🖕 Faire une doigt d'honneur", valuePV: 20, valueSkill: 20, sound: ["./src/sounds/prout1.mp3", "./src/sounds/prout2.mp3"]},
+  {id: 4, nom: "🤔 Comparer les notes", valuePV: 20, valueSkill: 20, sound: ["./src/sounds/note1.mp3"]},
+  {id: 5, nom: "🧘 Rester calme", valuePV: 0, valueSkill: 0, sound: ["./src/sounds/zen1.mp3", "./src/sounds/zen2.mp3"]},
 ]);
 
 // Combattant actif (1 = joueur, 2 = ordinateur)
@@ -41,7 +41,7 @@ provide('compteurVictoire', compteurVictoire);
 provide('compteurDefaite', compteurDefaite);
 provide('tour', tour);
 
-const appliquerCompetence = (attaquantId, defenseurId, competence) => {
+const appliquerCompetence = async (attaquantId, defenseurId, competence) => {
   const attaquant = combattants.value.find(c => c.id === attaquantId);
   const defenseur = combattants.value.find(c => c.id === defenseurId);
 
@@ -50,6 +50,18 @@ const appliquerCompetence = (attaquantId, defenseurId, competence) => {
     activeCombattantId.value = attaquantId;
     
     if (attaquant.skill >= competence.valueSkill) {
+      // Jouer le son
+      const audio = new Audio(competence.sound[Math.floor(Math.random() * competence.sound.length)]);
+      audio.play();
+      
+      // Attendre que le son se joue (délai de 1.5 secondes pour les sons courts)
+      await new Promise(resolve => {
+        audio.onended = () => resolve();
+        // Timeout de sécurité au cas où le son ne se termine pas
+        setTimeout(() => resolve(), 2000);
+      });
+      
+      // Appliquer les effets après le délai
       defenseur.moral = Math.max(0, defenseur.moral - competence.valuePV);
       attaquant.skill = Math.max(0, attaquant.skill - competence.valueSkill);
       if(attaquant.skill < 50) {
@@ -62,39 +74,38 @@ const appliquerCompetence = (attaquantId, defenseurId, competence) => {
   return false;
 };
 
-const tourOrdinateur = () => {
+const tourOrdinateur = async () => {
   if(combatTermine.value === false) {
-  activeCombattantId.value = 2;
-  
-  const competenceAleatoire = competences.value[Math.floor(Math.random() * competences.value.length)];
-  
-  const succes = appliquerCompetence(2, 1, competenceAleatoire);
-  
-  if (succes) {
-  } else {
-    const competenceCalme = competences.value.find(c => c.id === 5);
-    if (competenceCalme) {
-      appliquerCompetence(2, 1, competenceCalme);
-      console.log(`L'ordinateur utilise: ${competenceCalme.nom}`);
+    activeCombattantId.value = 2;
+    
+    const competenceAleatoire = competences.value[Math.floor(Math.random() * competences.value.length)];
+    
+    const succes = await appliquerCompetence(2, 1, competenceAleatoire);
+    
+    if (succes) {
+      await new Promise(resolve => setTimeout(resolve, 500));
+    } else {
+      const competenceCalme = competences.value.find(c => c.id === 5);
+      if (competenceCalme) {
+        await appliquerCompetence(2, 1, competenceCalme);
+        console.log(`L'ordinateur utilise: ${competenceCalme.nom}`);
+        await new Promise(resolve => setTimeout(resolve, 500));
+      }
     }
-  }
-  
-  setTimeout(() => {
+    
     activeCombattantId.value = 1;
     tour.value++;
-  }, 1000);
-}
+  }
 };
 
-const handleCompetence = (competence) => {
+const handleCompetence = async (competence) => {
   activeCombattantId.value = 1;
   
-  const succes = appliquerCompetence(1, 2, competence);
+  const succes = await appliquerCompetence(1, 2, competence);
   
   if (succes) {
-
-      tourOrdinateur();
-
+    await new Promise(resolve => setTimeout(resolve, 500));
+    tourOrdinateur();
   } else {
     alert('Pas assez de skill pour utiliser cette compétence');
   }

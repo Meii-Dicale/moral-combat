@@ -21,13 +21,12 @@ const activeCombattantId = inject('activeCombattantId');
 const combatTermine = inject('combatTermine');
 
 const competences = ref([
-    {id: 1, nom: "🤭 Lancer une vanne", valuePV: 10, valueSkill: 10},
-    {id: 2, nom: "🤬 Insulter", valuePV: 15, valueSkill: 15},
-    {id: 3, nom: "🖕 Faire une doigt d'honneur", valuePV: 20, valueSkill: 20},
-    {id: 4, nom: "🤔 Comparer les notes", valuePV: 20, valueSkill: 20},
-    {id: 5, nom: "🧘 Rester calme", valuePV: 0, valueSkill: 0},
-
-])  
+  {id: 1, nom: "🤭 Lancer une vanne", valuePV: 10, valueSkill: 10 ,sound: ["./src/sounds/rire1.wav", "./src/sounds/rire2.wav", "./src/sounds/rire3.wav"]},
+  {id: 2, nom: "🤬 Insulter", valuePV: 15, valueSkill: 15, sound: ["./src/sounds/insulte1.mp3", "./src/sounds/insulte2.wav", "./src/sounds/insulte3.wav"]},
+  {id: 3, nom: "🖕 Faire une doigt d'honneur", valuePV: 20, valueSkill: 20, sound: ["./src/sounds/prout1.mp3", "./src/sounds/prout2.mp3"]},
+  {id: 4, nom: "🤔 Comparer les notes", valuePV: 20, valueSkill: 20, sound: ["./src/sounds/note1.mp3"]},
+  {id: 5, nom: "🧘 Rester calme", valuePV: 0, valueSkill: 0, sound: ["./src/sounds/zen1.mp3", "./src/sounds/zen2.mp3"]},
+]);
 
 const utiliserCompetence = (id) => {
     if (activeCombattantId.value === 2 || combatTermine.value) {
